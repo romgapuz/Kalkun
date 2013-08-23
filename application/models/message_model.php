@@ -471,7 +471,10 @@ class Message_model extends Model {
 		if(isset($options['uid']))
 		{
 			$this->db->join($user_folder, $user_folder.'.id_'.$options['type'].'='.$options['type'].'.ID');
-			$this->db->where($user_folder.'.id_user',$options['uid']);	
+                        if (!$this->config->item('shared_'.$options['type']))
+                        {
+                            $this->db->where($user_folder.'.id_user',$options['uid']);
+                        }
 			
 			// if trash is set
 			if(isset($options['trash']) && is_bool($options['trash'])) $this->db->where($user_folder.'.trash', $options['trash']);	
@@ -760,7 +763,10 @@ class Message_model extends Model {
 				//$this->db->select_max($this->_protect_identifiers('ReceivingDateTime'), $this->_protect_identifiers('maxdate'), FALSE);
                 $this->db->select_max($this->_protect_identifiers('ID'), $this->_protect_identifiers('maxID'), FALSE);
 				$this->db->join('user_inbox','user_inbox.id_inbox=inbox.ID');
-				$this->db->where('id_user', $user_id);
+                                if (!$this->config->item('shared_inbox'))
+                                {
+                                    $this->db->where('id_user', $user_id);
+                                }
 				$this->db->where('id_folder', $tmp_id_folder);
 				$this->db->group_by('SenderNumber');
 				
@@ -771,7 +777,10 @@ class Message_model extends Model {
 				//$this->db->from("($sub_sql) as ".$this->_protect_identifiers('maxresult').",inbox");
                 $this->db->from("($sub_sql) as ".$this->_protect_identifiers('maxresult').",inbox");
 				$this->db->join('user_inbox','user_inbox.id_inbox=inbox.ID');
-				$this->db->where('id_user', $user_id);
+                                if (!$this->config->item('shared_inbox'))
+                                {
+                                    $this->db->where('id_user', $user_id);
+                                }
 				$this->db->where('id_folder', $tmp_id_folder);
 				$this->db->where('trash', $tmp_trash);
 				
@@ -785,7 +794,10 @@ class Message_model extends Model {
 				$this->db->from('outbox');
 				$this->db->select_max($this->_protect_identifiers('SendingDateTime'), $this->_protect_identifiers('maxdate'), FALSE);
 				$this->db->join('user_outbox','outbox.ID=user_outbox.id_outbox');
-				$this->db->where('id_user', $user_id);
+                                if (!$this->config->item('shared_outbox'))
+                                {
+                                    $this->db->where('id_user', $user_id);
+                                }
 				$this->db->group_by('DestinationNumber');
 				
 				$sub_sql = $this->db->_compile_select();
@@ -794,7 +806,10 @@ class Message_model extends Model {
 				$this->db->distinct();
 				$this->db->from("($sub_sql) as ".$this->_protect_identifiers('maxresult').",outbox");
 				$this->db->join('user_outbox','outbox.ID=user_outbox.id_outbox');
-				$this->db->where('id_user', $user_id);
+                                if (!$this->config->item('shared_outbox'))
+                                {
+                                    $this->db->where('id_user', $user_id);
+                                }
 				$this->db->where($this->_protect_identifiers('SendingDateTime'), $this->_protect_identifiers('maxresult.maxdate'), FALSE);
 				//$this->db->group_by('DestinationNumber');
 				$this->db->order_by('SendingDateTime', 'DESC');
@@ -804,7 +819,10 @@ class Message_model extends Model {
 				$this->db->from('sentitems');
 				$this->db->select_max($this->_protect_identifiers('SendingDateTime'), $this->_protect_identifiers('maxdate'), FALSE);
 				$this->db->join('user_sentitems','sentitems.ID=user_sentitems.id_sentitems');
-				$this->db->where('id_user', $user_id);
+                                if (!$this->config->item('shared_sentitems'))
+                                {
+                                    $this->db->where('id_user', $user_id);
+                                }
 				$this->db->where('id_folder', $tmp_id_folder);
 				$this->db->where('SequencePosition', '1');
 				$this->db->group_by('DestinationNumber');
@@ -815,7 +833,10 @@ class Message_model extends Model {
 				$this->db->distinct();
 				$this->db->from("($sub_sql) as ".$this->_protect_identifiers('maxresult').",sentitems");
 				$this->db->join('user_sentitems','sentitems.ID=user_sentitems.id_sentitems');
-				$this->db->where('id_user', $user_id);
+                                if (!$this->config->item('shared_sentitems'))
+                                {
+                                    $this->db->where('id_user', $user_id);
+                                }
 				$this->db->where('id_folder', $tmp_id_folder);
 				$this->db->where('SequencePosition', '1');
 				$this->db->where('trash', $tmp_trash);

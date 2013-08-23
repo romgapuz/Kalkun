@@ -75,6 +75,19 @@ $config['inbox_owner_id'] = array('1');
 
 /*
 |--------------------------------------------------------------------------
+| Shared Inbox, Outbox and Sent Items
+|--------------------------------------------------------------------------
+|
+| When enabled, shows the all folder messages regardless of the message owner.
+| Can either be TRUE or FALSE.
+|
+*/
+$config['shared_inbox'] = TRUE;
+$config['shared_outbox'] = TRUE;
+$config['shared_sentitems'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
 | Disable Outgoing Message
 |--------------------------------------------------------------------------
 |
